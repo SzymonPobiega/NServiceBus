@@ -86,7 +86,7 @@
 
         static Dictionary<string, string> DefaultConnectionStrings = new Dictionary<string, string>
             {
-                {"FileBasedTransport", "tbd"},
+                {"DevelopmentTransport", "tbd"},
                 {"RabbitMQTransport", "host=localhost"},
                 {"SqlServerTransport", @"Server=localhost\sqlexpress;Database=nservicebus;Trusted_Connection=True;"},
                 {"MsmqTransport", @"cacheSendConnection=false;journal=false;"}

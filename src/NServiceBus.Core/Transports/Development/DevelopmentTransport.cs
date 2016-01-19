@@ -10,9 +10,9 @@
     using NServiceBus.Transports;
     
     /// <summary>
-    /// A file based transport.
+    /// A transport optimized for development use. DO NOT use in production.
     /// </summary>
-    public class FileBasedTransport : TransportDefinition
+    public class DevelopmentTransport : TransportDefinition
     {
         /// <summary>
         /// Used by implementations to control if a connection string is necessary.

@@ -15,17 +15,14 @@
     public class FileBasedTransport : TransportDefinition
     {
         /// <summary>
+        /// Used by implementations to control if a connection string is necessary.
+        /// </summary>
+        public override bool RequiresConnectionString => false;
+
+        /// <summary>
         /// Gets an example connection string to use when reporting lack of configured connection string to the user.
         /// </summary>
         public override string ExampleConnectionStringForErrorMessage { get; } = "";
-
-        /// <summary>
-        /// Returns the discriminator for this endpoint instance.
-        /// </summary>
-        string GetDiscriminatorForThisEndpointInstance()
-        {
-            return "\\";
-        }
 
         /// <summary>
         /// Gets the highest supported transaction mode for the this transport.

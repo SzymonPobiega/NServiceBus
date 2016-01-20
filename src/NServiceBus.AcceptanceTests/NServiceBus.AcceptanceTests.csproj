@@ -84,7 +84,6 @@
     <Compile Include="DelayedDelivery\When_TimeoutManager_is_disabled.cs" />
     <Compile Include="Msmq\When_starting_up_the_endpoint.cs" />
     <Compile Include="Msmq\When_using_scope_timeout_greater_than_machine_max.cs" />
-    <Compile Include="FakeTransport\FakeTransportSetingsExtensions.cs" />
     <Compile Include="Mutators\When_mutating.cs" />
     <Compile Include="BestPractices\When_publishing_command_bestpractices_disabled_on_endpoint.cs" />
     <Compile Include="BestPractices\When_sending_events_bestpractices_disabled_on_endpoint.cs" />

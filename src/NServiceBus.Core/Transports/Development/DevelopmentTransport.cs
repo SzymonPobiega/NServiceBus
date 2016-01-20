@@ -8,7 +8,7 @@
     using NServiceBus.Routing;
     using NServiceBus.Settings;
     using NServiceBus.Transports;
-    
+
     /// <summary>
     /// A transport optimized for development use. DO NOT use in production.
     /// </summary>
@@ -28,7 +28,7 @@
         /// Gets the highest supported transaction mode for the this transport.
         /// </summary>
         public override TransportTransactionMode GetSupportedTransactionMode() => TransportTransactionMode.SendsAtomicWithReceive;
-     
+
         /// <summary>
         /// Will be called if the transport has indicated that it has native support for pub sub.
         /// Creates a transport address for the input queue defined by a logical address.
@@ -80,7 +80,9 @@
         /// <returns>The transport address.</returns>
         public override string ToTransportAddress(LogicalAddress logicalAddress)
         {
-            return Path.Combine(logicalAddress.EndpointInstance.Endpoint.ToString(), logicalAddress.Qualifier ?? "");
+            return Path.Combine(logicalAddress.EndpointInstance.Endpoint.ToString(),
+                logicalAddress.EndpointInstance.Discriminator ?? "",
+                logicalAddress.Qualifier ?? "");
         }
 
         /// <summary>

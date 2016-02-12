@@ -12,37 +12,40 @@ namespace NServiceBus.Routing.MessageDrivenSubscriptions
     {
         List<Rule> rules = new List<Rule>();
 
-        /// <summary>
-        /// Registers a publisher for a given endpoint type.
-        /// </summary>
-        /// <param name="publisher">Publisher endpoint.</param>
-        /// <param name="eventType">Event type.</param>
-        public void AddStatic(EndpointName publisher, Type eventType)
-        {
-            rules.Add(new Rule(type => StaticTypeRule(type, eventType, new PublisherAddress(publisher)), $"{eventType.FullName} -> {publisher}"));
-        }
-        
-        /// <summary>
-        /// Registers a publisher for a given endpoint type.
-        /// </summary>
-        /// <param name="publisherAddress">Publisher physical address.</param>
-        /// <param name="eventType">Event type.</param>
-        public void AddStatic(string publisherAddress, Type eventType)
-        {
-            rules.Add(new Rule(type => StaticTypeRule(type, eventType, new PublisherAddress(publisherAddress)), $"{eventType.FullName} -> {publisherAddress}"));
-        }
-
         internal IEnumerable<PublisherAddress> GetPublisherFor(Type eventType)
         {
             var distinctPublishers = rules.Select(r => r.Apply(eventType)).Where(e => e != null).Distinct().ToList();
             return distinctPublishers;
         }
 
-        static PublisherAddress StaticTypeRule(Type typeBeingQueried, Type configuredType, PublisherAddress configuredAddress)
+        /// <summary>
+        /// Registers a publisher endpoint for a given endpoint type.
+        /// </summary>
+        /// <param name="publisher">Publisher endpoint.</param>
+        /// <param name="eventType">Event type.</param>
+        public void Add(EndpointName publisher, Type eventType)
         {
-            return typeBeingQueried == configuredType
-                ? configuredAddress
-                : null;
+            rules.Add(new Rule(type => StaticTypeRule(type, eventType, new PublisherAddress(publisher)), $"{eventType.FullName} -> {publisher}"));
+        }
+
+        /// <summary>
+        /// Registers a publisher endpoint for a given endpoint type.
+        /// </summary>
+        /// <param name="publisher">Publisher endpoint.</param>
+        /// <param name="eventType">Event type.</param>
+        public void Add(string publisher, Type eventType)
+        {
+            rules.Add(new Rule(type => StaticTypeRule(type, eventType, new PublisherAddress(new EndpointName(publisher))), $"{eventType.FullName} -> {publisher}"));
+        }
+
+        /// <summary>
+        /// Registers a publisher address for a given endpoint type.
+        /// </summary>
+        /// <param name="publisherAddress">Publisher physical address.</param>
+        /// <param name="eventType">Event type.</param>
+        public void AddByAddress(string publisherAddress, Type eventType)
+        {
+            rules.Add(new Rule(type => StaticTypeRule(type, eventType, new PublisherAddress(publisherAddress)), $"{eventType.FullName} -> {publisherAddress}"));
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace NServiceBus.Routing.MessageDrivenSubscriptions
         /// <param name="publisher">Publisher endpoint.</param>
         /// <param name="eventAssembly">Assembly containing events.</param>
         /// <param name="eventNamespace">Optional namespace containing events.</param>
-        public void AddStatic(EndpointName publisher, Assembly eventAssembly, string eventNamespace = null)
+        public void Add(EndpointName publisher, Assembly eventAssembly, string eventNamespace = null)
         {
             rules.Add(new Rule(type => StaticAssemblyRule(type, eventAssembly, eventNamespace, new PublisherAddress(publisher)), $"{eventAssembly.GetName().Name}/{eventNamespace ?? "*"} -> {publisher}"));
         }
@@ -59,6 +62,13 @@ namespace NServiceBus.Routing.MessageDrivenSubscriptions
         static PublisherAddress StaticAssemblyRule(Type typeBeingQueried, Assembly configuredAssembly, string configuredNamespace, PublisherAddress configuredAddress)
         {
             return typeBeingQueried.Assembly == configuredAssembly && (configuredNamespace == null || configuredNamespace.Equals(typeBeingQueried.Namespace, StringComparison.InvariantCultureIgnoreCase))
+                ? configuredAddress
+                : null;
+        }
+
+        static PublisherAddress StaticTypeRule(Type typeBeingQueried, Type configuredType, PublisherAddress configuredAddress)
+        {
+            return typeBeingQueried == configuredType
                 ? configuredAddress
                 : null;
         }

@@ -61,7 +61,7 @@
                         var typesEnclosed = knownMessageTypes.Where(t => t.IsAssignableFrom(type));
                         foreach (var t in typesEnclosed)
                         {
-                            publishers.AddStatic(s, t);
+                            publishers.Add(s, t);
                         }
                     });
                 }
@@ -143,7 +143,7 @@
                     var subscriptions = builder.BuildAll<ISubscriptionStorage>().FirstOrDefault();
                     if (subscriptions != null)
                     {
-                        settings.Get<UnicastRoutingTable>().AddDynamic((t, c) => QuerySubscriptionStore(subscriptions, t, c));
+                        settings.Get<UnicastRoutingTable>().AddExternalProvider((t, c) => QuerySubscriptionStore(subscriptions, t, c));
                     }
                 }
                 return TaskEx.CompletedTask;

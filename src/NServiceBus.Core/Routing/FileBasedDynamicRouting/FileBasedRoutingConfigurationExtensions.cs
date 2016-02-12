@@ -10,7 +10,7 @@ namespace NServiceBus
         /// <summary>
         /// Enables file-based route table source that is automatically refreshed whenever files get updated.
         /// </summary>
-        public static FileRoutingTableSettings UseFileBasedEndpointInstanceMapping(this RoutingSettings config, string filePath)
+        public static FileRoutingTableSettings UseFileBasedEndpointInstanceMapping(this UnicastRoutingSettings config, string filePath)
         {
             Guard.AgainstNull(nameof(filePath), filePath);
 

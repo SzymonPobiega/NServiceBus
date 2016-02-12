@@ -8,10 +8,10 @@
         /// <summary>
         /// Gets the routing table for the direct routing.
         /// </summary>
-        public static RoutingSettings Routing(this EndpointConfiguration config)
+        public static UnicastRoutingSettings UnicastRouting(this EndpointConfiguration config)
         {
             Guard.AgainstNull(nameof(config), config);
-            return new RoutingSettings(config.Settings);
+            return new UnicastRoutingSettings(config.Settings);
         }
     }
 }

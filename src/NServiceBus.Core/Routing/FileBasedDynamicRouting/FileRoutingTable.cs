@@ -25,7 +25,7 @@ namespace NServiceBus
         protected override async Task OnStart(IMessageSession session)
         {
             var endpointInstances = settings.Get<EndpointInstances>();
-            endpointInstances.AddDynamic(FindInstances);
+            endpointInstances.AddExternalProvider(FindInstances);
 
             await ReloadData().ConfigureAwait(false);
 

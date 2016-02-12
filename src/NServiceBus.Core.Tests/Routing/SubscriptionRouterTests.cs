@@ -28,11 +28,11 @@ namespace NServiceBus.Core.Tests.Routing
             var inheritedEndpoint = new EndpointName(inheritedAddress);
 
             var publishers = new Publishers();
-            publishers.AddStatic(baseEndpoint, baseType );
-            publishers.AddStatic(inheritedEndpoint, baseType);
-            publishers.AddStatic(inheritedEndpoint, inheritedType );
+            publishers.Add(baseEndpoint, baseType );
+            publishers.Add(inheritedEndpoint, baseType);
+            publishers.Add(inheritedEndpoint, inheritedType );
             var endpointInstances = new EndpointInstances();
-            endpointInstances.AddDynamic(e => Task.FromResult(EnumerableEx.Single(new EndpointInstance(e))));
+            endpointInstances.AddExternalProvider(e => Task.FromResult(EnumerableEx.Single(new EndpointInstance(e))));
             var physicalAddresses = new TransportAddresses(address => null);
             physicalAddresses.AddRule(i => i.EndpointInstance.Endpoint.ToString());
             var router = new SubscriptionRouter(publishers, endpointInstances, physicalAddresses);
@@ -52,11 +52,11 @@ namespace NServiceBus.Core.Tests.Routing
             var inheritedEndpoint = new EndpointName("addressB");
 
             var publishers = new Publishers();
-            publishers.AddStatic(baseEndpoint, baseType);
-            publishers.AddStatic(inheritedEndpoint, baseType);
-            publishers.AddStatic(inheritedEndpoint, inheritedType);
+            publishers.Add(baseEndpoint, baseType);
+            publishers.Add(inheritedEndpoint, baseType);
+            publishers.Add(inheritedEndpoint, inheritedType);
             var knownEndpoints = new EndpointInstances();
-            knownEndpoints.AddDynamic(e => Task.FromResult(EnumerableEx.Single(new EndpointInstance(e, null, null))));
+            knownEndpoints.AddExternalProvider(e => Task.FromResult(EnumerableEx.Single(new EndpointInstance(e, null, null))));
             var physicalAddresses = new TransportAddresses(address => null);
             physicalAddresses.AddRule(i => i.EndpointInstance.Endpoint.ToString());
             var router = new SubscriptionRouter(publishers, knownEndpoints, physicalAddresses);

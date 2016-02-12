@@ -68,21 +68,21 @@ namespace NServiceBus.Routing
         }
 
         /// <summary>
-        /// Adds a rule for generating unicast routes.
+        /// Adds an external provider of routes.
         /// </summary>
-        /// <remarks>For dynamic routes that do not require async use <see cref="AddDynamic(Func{List{Type},ContextBag,IEnumerable{IUnicastRoute}})"/>.</remarks>
+        /// <remarks>For dynamic routes that do not require async use <see cref="AddExternalProvider(System.Func{System.Collections.Generic.List{System.Type},NServiceBus.Extensibility.ContextBag,System.Collections.Generic.IEnumerable{NServiceBus.Routing.IUnicastRoute}})"/>.</remarks>
         /// <param name="dynamicRule">The rule.</param>
-        public void AddDynamic(Func<List<Type>, ContextBag, Task<IEnumerable<IUnicastRoute>>> dynamicRule)
+        public void AddExternalProvider(Func<List<Type>, ContextBag, Task<IEnumerable<IUnicastRoute>>> dynamicRule)
         {
             asyncDynamicRules.Add(dynamicRule);
         }
 
         /// <summary>
-        /// Adds a rule for generating unicast routes.
+        /// Adds an external provider of routes.
         /// </summary>
-        /// <remarks>For dynamic routes that require async use <see cref="AddDynamic(Func{List{Type},ContextBag,Task{IEnumerable{IUnicastRoute}}})"/>.</remarks>
+        /// <remarks>For dynamic routes that require async use <see cref="AddExternalProvider(System.Func{System.Collections.Generic.List{System.Type},NServiceBus.Extensibility.ContextBag,System.Threading.Tasks.Task{System.Collections.Generic.IEnumerable{NServiceBus.Routing.IUnicastRoute}}})"/>.</remarks>
         /// <param name="dynamicRule">The rule.</param>
-        public void AddDynamic(Func<List<Type>, ContextBag, IEnumerable<IUnicastRoute>> dynamicRule)
+        public void AddExternalProvider(Func<List<Type>, ContextBag, IEnumerable<IUnicastRoute>> dynamicRule)
         {
             dynamicRules.Add(dynamicRule);
         }

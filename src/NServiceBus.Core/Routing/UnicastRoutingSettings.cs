@@ -8,9 +8,9 @@
     /// <summary>
     /// Exposes settings related to routing.
     /// </summary>
-    public class RoutingSettings : ExposeSettings
+    public class UnicastRoutingSettings : ExposeSettings
     {
-        internal RoutingSettings(SettingsHolder settings)
+        internal UnicastRoutingSettings(SettingsHolder settings)
             : base(settings)
         {
         }
@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets the routing table for the direct routing.
         /// </summary>
-        public UnicastRoutingTable UnicastRoutingTable => GetOrCreate<UnicastRoutingTable>();
+        public UnicastRoutingTable Table => GetOrCreate<UnicastRoutingTable>();
         
         /// <summary>
         /// Gets the known endpoints collection.

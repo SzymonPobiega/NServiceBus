@@ -348,7 +348,7 @@ namespace NServiceBus
     }
     public class static FileBasedRoutingConfigurationExtensions
     {
-        public static NServiceBus.FileRoutingTableSettings UseFileBasedEndpointInstanceMapping(this NServiceBus.RoutingSettings config, string filePath) { }
+        public static NServiceBus.FileRoutingTableSettings UseFileBasedEndpointInstanceMapping(this NServiceBus.UnicastRoutingSettings config, string filePath) { }
     }
     public class FileRoutingTableSettings : NServiceBus.Configuration.AdvanceExtensibility.ExposeSettings
     {
@@ -769,7 +769,7 @@ namespace NServiceBus
     }
     public class static PublishersSettingsExtensions
     {
-        public static NServiceBus.Routing.MessageDrivenSubscriptions.Publishers Publishers(this NServiceBus.EndpointConfiguration config) { }
+        public static NServiceBus.Routing.MessageDrivenSubscriptions.Publishers Publishers(this NServiceBus.UnicastRoutingSettings config) { }
     }
     public class PublishOptions : NServiceBus.Extensibility.ExtendableOptions
     {
@@ -785,15 +785,9 @@ namespace NServiceBus
         public static void RouteToLocalEndpointInstance(this NServiceBus.SendOptions option) { }
         public static void SetDestination(this NServiceBus.SendOptions option, string destination) { }
     }
-    public class RoutingSettings : NServiceBus.Configuration.AdvanceExtensibility.ExposeSettings
-    {
-        public NServiceBus.Routing.EndpointInstances EndpointInstances { get; }
-        public NServiceBus.Routing.UnicastRoutingTable UnicastRoutingTable { get; }
-        public void SetMessageDistributionStrategy(NServiceBus.Routing.DistributionStrategy distributionStrategy, System.Func<System.Type, bool> typeMatchingRule) { }
-    }
     public class static RoutingSettingsExtensions
     {
-        public static NServiceBus.RoutingSettings Routing(this NServiceBus.EndpointConfiguration config) { }
+        public static NServiceBus.UnicastRoutingSettings UnicastRouting(this NServiceBus.EndpointConfiguration config) { }
     }
     public abstract class Saga
     {
@@ -991,6 +985,12 @@ namespace NServiceBus
         ReceiveOnly = 1,
         SendsAtomicWithReceive = 2,
         TransactionScope = 3,
+    }
+    public class UnicastRoutingSettings : NServiceBus.Configuration.AdvanceExtensibility.ExposeSettings
+    {
+        public NServiceBus.Routing.EndpointInstances EndpointInstances { get; }
+        public NServiceBus.Routing.UnicastRoutingTable Table { get; }
+        public void SetMessageDistributionStrategy(NServiceBus.Routing.DistributionStrategy distributionStrategy, System.Func<System.Type, bool> typeMatchingRule) { }
     }
     public sealed class UnicastRoutingTarget
     {
@@ -2200,8 +2200,8 @@ namespace NServiceBus.Routing
     public class EndpointInstances
     {
         public EndpointInstances() { }
-        public void AddDynamic(System.Func<NServiceBus.Routing.EndpointName, System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NServiceBus.Routing.EndpointInstance>>> dynamicRule) { }
-        public void AddStatic(NServiceBus.Routing.EndpointName endpoint, params NServiceBus.Routing.EndpointInstance[] instances) { }
+        public void Add(NServiceBus.Routing.EndpointName endpoint, params NServiceBus.Routing.EndpointInstance[] instances) { }
+        public void AddExternalProvider(System.Func<NServiceBus.Routing.EndpointName, System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NServiceBus.Routing.EndpointInstance>>> dynamicRule) { }
     }
     public sealed class EndpointName
     {
@@ -2254,8 +2254,8 @@ namespace NServiceBus.Routing
     public class UnicastRoutingTable
     {
         public UnicastRoutingTable() { }
-        public void AddDynamic(System.Func<System.Collections.Generic.List<System.Type>, NServiceBus.Extensibility.ContextBag, System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NServiceBus.Routing.IUnicastRoute>>> dynamicRule) { }
-        public void AddDynamic(System.Func<System.Collections.Generic.List<System.Type>, NServiceBus.Extensibility.ContextBag, System.Collections.Generic.IEnumerable<NServiceBus.Routing.IUnicastRoute>> dynamicRule) { }
+        public void AddExternalProvider(System.Func<System.Collections.Generic.List<System.Type>, NServiceBus.Extensibility.ContextBag, System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NServiceBus.Routing.IUnicastRoute>>> dynamicRule) { }
+        public void AddExternalProvider(System.Func<System.Collections.Generic.List<System.Type>, NServiceBus.Extensibility.ContextBag, System.Collections.Generic.IEnumerable<NServiceBus.Routing.IUnicastRoute>> dynamicRule) { }
         public void RouteToAddress(System.Type messageType, string destinationAddress) { }
         public void RouteToEndpoint(System.Type messageType, NServiceBus.Routing.EndpointName destination) { }
         public void RouteToEndpoint(System.Type messageType, string destination) { }
@@ -2279,10 +2279,11 @@ namespace NServiceBus.Routing.MessageDrivenSubscriptions
     public class Publishers
     {
         public Publishers() { }
+        public void Add(NServiceBus.Routing.EndpointName publisher, System.Type eventType) { }
+        public void Add(string publisher, System.Type eventType) { }
+        public void Add(NServiceBus.Routing.EndpointName publisher, System.Reflection.Assembly eventAssembly, string eventNamespace = null) { }
+        public void AddByAddress(string publisherAddress, System.Type eventType) { }
         public void AddDynamic(System.Func<System.Type, NServiceBus.Routing.MessageDrivenSubscriptions.PublisherAddress> dynamicRule, string description = null) { }
-        public void AddStatic(NServiceBus.Routing.EndpointName publisher, System.Type eventType) { }
-        public void AddStatic(string publisherAddress, System.Type eventType) { }
-        public void AddStatic(NServiceBus.Routing.EndpointName publisher, System.Reflection.Assembly eventAssembly, string eventNamespace = null) { }
     }
 }
 namespace NServiceBus.Routing.StorageDrivenPublishing

@@ -55,13 +55,13 @@ namespace NServiceBus
 
         static bool IsConcrete(Type x)
         {
-            return !x.IsAbstract && ! x.IsInterface;
+            return !x.IsAbstract && !x.IsInterface;
         }
 
         void ConfigRunBeforeIsFinalized(IEnumerable<Type> concreteTypes)
         {
             foreach (var instanceToInvoke in concreteTypes.Where(IsIWantToRunBeforeConfigurationIsFinalized)
-                .Select(type => (IWantToRunBeforeConfigurationIsFinalized) Activator.CreateInstance(type)))
+                .Select(type => (IWantToRunBeforeConfigurationIsFinalized)Activator.CreateInstance(type)))
             {
                 instanceToInvoke.Run(settings);
             }
@@ -117,16 +117,12 @@ namespace NServiceBus
 
         void RegisterContainerAdapter(IContainer containerToAdapt)
         {
-            var b = new CommonObjectBuilder
-            {
-                Container = containerToAdapt,
-            };
+            var b = new CommonObjectBuilder(containerToAdapt);
 
             builder = b;
             container = b;
 
-            container.ConfigureComponent<CommonObjectBuilder>(DependencyLifecycle.SingleInstance)
-                .ConfigureProperty(c => c.Container, containerToAdapt);
+            container.ConfigureComponent<IBuilder>(_ => b, DependencyLifecycle.SingleInstance);
         }
 
         void WireUpConfigSectionOverrides(IEnumerable<Type> concreteTypes)

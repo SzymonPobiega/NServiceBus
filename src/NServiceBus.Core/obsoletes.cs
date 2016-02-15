@@ -2,6 +2,7 @@
 // ReSharper disable UnusedParameter.Local
 
 
+using NServiceBus;
 
 #pragma warning disable 1591
 // ReSharper disable UnusedParameter.Global
@@ -188,7 +189,7 @@ namespace NServiceBus
             throw new NotImplementedException();
         }
     }
-    
+
     [ObsoleteEx(
         Message = "This is no longer a public API",
         RemoveInVersion = "7.0",
@@ -1813,3 +1814,35 @@ namespace NServiceBus.Transports.Msmq.Config
     {
     }
 }
+
+public static class ConfigureHandlerSettings
+{
+    [ObsoleteEx(
+         RemoveInVersion = "7.0",
+         TreatAsErrorFromVersion = "6.0",
+         Message = "Property injection is no longer supported via the builtin container in NServiceBus. Should you still want to use property injection you choose any of our supported containers and configure property injection using their native configuration API's.")]
+    public static void InitializeHandlerProperty<THandler>(this EndpointConfiguration config, string property, object value)
+    {
+    }
+}
+
+
+namespace NServiceBus.ObjectBuilder
+{
+    [ObsoleteEx(
+        RemoveInVersion = "7.0",
+        TreatAsErrorFromVersion = "6.0",
+        Message = "Property injection is no longer supported via the builtin container in NServiceBus. Should you still want to use property injection you choose any of our supported containers and configure property injection using their native configuration API's.")]
+    public interface IComponentConfig
+    {
+    }
+
+    [ObsoleteEx(
+        RemoveInVersion = "7.0",
+        TreatAsErrorFromVersion = "6.0",
+        Message = "Property injection is no longer supported via the builtin container in NServiceBus. Should you still want to use property injection you choose any of our supported containers and configure property injection using their native configuration API's.")]
+    public interface IComponentConfig<T>
+    {
+    }
+}
+
